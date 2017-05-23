@@ -1,0 +1,1247 @@
+{
+	"variables": [],
+	"info": {
+		"name": "TestCollection",
+		"_postman_id": "e0ed603c-7bc3-4340-3678-08cafdd2d598",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "lure-user-login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var test = jsonData.values.ses;",
+							"postman.setGlobalVariable(\"lureses\", test);",
+							"tests[\"Test Case Started: \"+globals.currentTestCaseName]=\"Test Case Started: Getting Lure Session ID\" ===\"Test Case Started: Getting Lure Session ID\";",
+							"tests[\"Check for ses in the output\"]= jsonData.values.ses === globals.lureses;",
+							"tests[\"Test Case Ended: \"+globals.currentTestCaseName]=\"Test Case Ended: Getting Lure Session ID\" ===\"Test Case Ended: Getting Lure Session ID\";"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"Getting Lure Session ID\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{connect2Url}}",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"enabled": true,
+							"key": "apitask",
+							"type": "text",
+							"value": "user-login"
+						},
+						{
+							"enabled": true,
+							"key": "apikey",
+							"type": "text",
+							"value": "{{apikey}}"
+						},
+						{
+							"enabled": true,
+							"key": "usr",
+							"type": "text",
+							"value": "lureapiuser"
+						},
+						{
+							"enabled": true,
+							"key": "pwd",
+							"type": "text",
+							"value": "3sc37b7WxS"
+						},
+						{
+							"enabled": true,
+							"key": "remember",
+							"type": "text",
+							"value": "1"
+						},
+						{
+							"enabled": true,
+							"key": "api",
+							"type": "text",
+							"value": "json"
+						}
+					]
+				},
+				"description": "OL API user login\nUID of lureapiuser: 10000310000307819"
+			},
+			"response": []
+		},
+		{
+			"name": "LMS Router Section Add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"{",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Started\"] = \"Test Case Started:LMS Router Section Add\" === \"Test Case Started:LMS Router Section Add\";",
+							"}",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"console.log(jsonData.success);",
+							"",
+							"",
+							"//Verification of Status",
+							"",
+							"{",
+							"",
+							" if(responseBody.has(\"errorcodes\"))",
+							"  ",
+							"   {",
+							"       if(jsonData.errorcodes[0].name === \"E_AUTHR_PRIV_LOGGED_IN\")",
+							"       {",
+							"          tests[\"Access token has expired...pls check and re-run again \" + \"\\\"Error Status:\\\" \" + jsonData.errorcodes[0].desc]= null;",
+							"          ",
+							"       }",
+							"       else",
+							"       {",
+							"           tests[\"One or two required parameters are missing. Please  check the response \" + \"\\\"Error Status:\\\" \" + jsonData.errorcodes[0].desc]= null;",
+							"       }",
+							"    }",
+							" else",
+							"   {",
+							"       tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"   }",
+							"}",
+							"",
+							"",
+							"",
+							"// Actual tests",
+							"",
+							"{",
+							"    if(responseCode.code === 200 && jsonData.success === true)",
+							"    {",
+							"        // Check Responce Structure(fields)",
+							"        tests[\"check success field in the response structure\"] = responseBody.has(\"success\");",
+							"        tests[\"check clid field in the response structure\"] = responseBody.has(\"clid\");",
+							"        tests[\"check time field in the response structure\"] = responseBody.has(\"time\");",
+							"        tests[\"check total time field in the response structure\"] = responseBody.has(\"totaltime\");",
+							"       ",
+							"        // Check Field Values",
+							"         tests[\"Check success is true\"] = jsonData.success === true;",
+							"         postman.setGlobalVariable(\"clid\" ,jsonData.clid);",
+							"    }",
+							"",
+							"}",
+							"",
+							"",
+							"//Test Case Ends",
+							" ",
+							"{",
+							"",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Ends here\"] = \"Test Case Ends:LMS Router Section Add\" === \"Test Case Ends:LMS Router Section Add\";",
+							"}",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.clearGlobalVariable(\"fulltimestamp\");",
+							"",
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"LMS Router Section Add\");",
+							"var date = new Date();",
+							"var getDate = eval(myFunction());",
+							"",
+							"var sectioname = getDate.getSectionName();",
+							"",
+							"postman.setGlobalVariable(\"fulltimestamp\", sectioname);",
+							"",
+							"",
+							"function myFunction()",
+							"{",
+							"    let datefunc ={};",
+							"    datefunc.getMonthName= function getMonthName(month) {",
+							"    return new Date(date.getYear(),month).toLocaleString('en',{month:\"long\"});",
+							"     }",
+							"   ",
+							"     ",
+							"     datefunc.getTodayDate = function getTodayDate(){",
+							"          var day = date.getMonth() + 1+'_'+date.getDate()+'_'+date.getFullYear();",
+							"          return day;",
+							"     }",
+							"     ",
+							"    datefunc.getSectionName= function getSectionName(){",
+							"         var day = date.toDateString(); //Wed May 17 2017",
+							"          var sectionName = ' '+",
+							"       datefunc.getMonthName(date.getMonth()+1)+' '+date.getDate()+' '+ date.getFullYear()+'_'+datefunc.getcurrentTime();",
+							"       return sectionName;",
+							"    }",
+							"    ",
+							"   datefunc.getcurrentTime= function getcurrentTime(){",
+							"       ",
+							"        var time = date.getHours()+''+date.getMinutes()+''+ date.getSeconds()+''+date.getMilliseconds();",
+							"         return time;",
+							"   }",
+							"   ",
+							"   ",
+							" ",
+							"       return datefunc;",
+							"}",
+							"",
+							"",
+							"//  function getMonthName(month) {",
+							"//     return new Date(date.getYear(),month).toLocaleString('en',{month:\"long\"});",
+							"// }",
+							"",
+							"// var incr = (function () {",
+							"//     var i = 1;",
+							"",
+							"//     return function () {",
+							"//         return i++;",
+							"//     }",
+							"// })();",
+							"",
+							"",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{connect2Url}}",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"enabled": true,
+							"key": "schoolid",
+							"type": "text",
+							"value": "10000310000220060"
+						},
+						{
+							"enabled": true,
+							"key": "name",
+							"type": "text",
+							"value": "apisection{{fulltimestamp}}"
+						},
+						{
+							"enabled": true,
+							"key": "apitask",
+							"type": "text",
+							"value": "lms-router-section-add"
+						},
+						{
+							"enabled": true,
+							"key": "gradelevel",
+							"type": "text",
+							"value": "9"
+						},
+						{
+							"enabled": true,
+							"key": "subject",
+							"type": "text",
+							"value": "99"
+						},
+						{
+							"enabled": true,
+							"key": "period",
+							"type": "text",
+							"value": "1"
+						},
+						{
+							"enabled": true,
+							"key": "ses",
+							"type": "text",
+							"value": "{{lureses}}"
+						},
+						{
+							"enabled": true,
+							"key": "apikey",
+							"type": "text",
+							"value": "{{apikey}}"
+						},
+						{
+							"enabled": true,
+							"key": "priteach",
+							"type": "text",
+							"value": "10000310000307616"
+						},
+						{
+							"enabled": true,
+							"key": "api",
+							"type": "text",
+							"value": "json"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "LMS Router Section Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"{",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Started\"] = \"Test Case Started:LMS Router Section Check\" === \"Test Case Started:LMS Router Section Check\";",
+							"}",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"console.log(jsonData.success);",
+							"",
+							"",
+							"//Verification of Status",
+							"",
+							"{",
+							"",
+							" if(responseBody.has(\"errors\"))",
+							"  ",
+							"   {",
+							"       if(jsonData.errors.clid ===\"Parameter formatting is incorrect. Parameter is too short. This value must be at least 10 characters long\")",
+							"       {",
+							"          tests[\"Clid passed is in invalid format.\"+\" \"+\"Response Error Message is :\" +jsonData.errors.clid]= jsonData.errors.clid=== null ;",
+							"       }",
+							"       else",
+							"       {",
+							"          tests[\"Access token has expired...pls check and re-run again \" + \"\\\"Error Status:\\\" \" + jsonData.errorcodes[0].desc]= null;",
+							"          ",
+							"       }",
+							"    }",
+							" else",
+							"   {",
+							"       tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"   }",
+							"}",
+							"",
+							"",
+							"",
+							"// Actual tests",
+							"",
+							"{",
+							"    if(responseCode.code === 200 && jsonData.success === true)",
+							"    {",
+							"        // Check Responce Structure(fields)",
+							"        tests[\"check success field in the response structure\"] = responseBody.has(\"success\");",
+							"        tests[\"check time field in the response structure\"] = responseBody.has(\"time\");",
+							"        tests[\"check total time field in the response structure\"] = responseBody.has(\"totaltime\");",
+							"       ",
+							"        // Check Field Values",
+							"         tests[\"Check success is true\"] = jsonData.success === true;",
+							"    }",
+							"",
+							"}",
+							"",
+							"",
+							"",
+							"//Test Case Ends",
+							" ",
+							"{",
+							"",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Ends here\"] = \"Test Case Ends:LMS Router Section Check\" === \"Test Case Ends:LMS Router Section Check\";",
+							"}",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"LMS Router Section Check\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{connect2Url}}",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"enabled": true,
+							"key": "uid",
+							"type": "text",
+							"value": "10000310000307616"
+						},
+						{
+							"enabled": true,
+							"key": "apitask",
+							"type": "text",
+							"value": "lms-router-section-check"
+						},
+						{
+							"enabled": true,
+							"key": "clid",
+							"type": "text",
+							"value": "{{clid}}"
+						},
+						{
+							"enabled": true,
+							"key": "ses",
+							"type": "text",
+							"value": "{{ses}}"
+						},
+						{
+							"enabled": true,
+							"key": "apikey",
+							"type": "text",
+							"value": "{{apikey}}"
+						},
+						{
+							"enabled": true,
+							"key": "api",
+							"type": "text",
+							"value": "json"
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "LMS Router Section Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"{",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Started\"] = \"Test Case Started:LMS Router Section Data\" === \"Test Case Started:LMS Router Section Data\";",
+							"}",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"console.log(jsonData.success);",
+							"",
+							"",
+							"//Verification of Status",
+							"",
+							"{",
+							"",
+							" if(responseBody.has(\"errors\"))",
+							"  ",
+							"   {",
+							"       if(jsonData.errors.clid ===\"Parameter formatting is incorrect. Parameter is too short. This value must be at least 10 characters long\")",
+							"       {",
+							"          tests[\"Clid passed is in invalid format.\"+\" \"+\"Response Error Message is :\" +jsonData.errors.clid]= jsonData.errors.clid=== null ;",
+							"       }",
+							"       else if(jsonData.errorcodes[0].name === \"E_AUTHR_PRIV_LOGGED_IN\")",
+							"       {",
+							"          tests[\"Access token has expired...pls check and re-run again \" + \"\\\"Error Status:\\\" \" + jsonData.errorcodes[0].desc]= null;",
+							"          ",
+							"       }",
+							"       else",
+							"       {",
+							"           tests[\"One or two required parameters are missing. Please  check the response \" + \"\\\"Error Status:\\\" \" + jsonData.errorcodes[0].desc]= null;",
+							"       }",
+							"    }",
+							" else",
+							"   {",
+							"       tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"   }",
+							"}",
+							"",
+							"",
+							"",
+							"// Actual tests",
+							"",
+							"{",
+							"    if(responseCode.code === 200 && jsonData.success === true)",
+							"    {",
+							"        // Check Responce Structure(fields)",
+							"        tests[\"check success field in the response structure\"] = responseBody.has(\"success\");",
+							"        tests[\"Check Section Data in response structure\"]= responseBody.has(\"section-data\");",
+							"        tests[\"Check Class Information in response structure\"]=responseBody.has(\"class\") && responseBody.has(\"clid\" && \"name\" && \"priteach\" && \"teachername\");",
+							"        tests[\"Check School Information in response structure\"]=responseBody.has(\"school\") && responseBody.has(\"schoolid\");",
+							"        tests[\"check time field in the response structure\"] = responseBody.has(\"time\");",
+							"        tests[\"check total time field in the response structure\"] = responseBody.has(\"totaltime\");",
+							"       ",
+							"        // Check Field Values",
+							"         tests[\"Check success is true\"] = jsonData.success === true;",
+							"         console.log(jsonData['section-data'].class.name);",
+							"         tests[\"Check clid is same as clid passed\"] = jsonData['section-data'].class.clid == globals.clid;",
+							"         tests[\"Check name of the section is same as generated section name\"] = jsonData['section-data'].class.name === \"apisection\"+globals.fulltimestamp;",
+							"         ",
+							"         ",
+							"    }",
+							"",
+							"}",
+							"",
+							"",
+							"",
+							"//Test Case Ends",
+							" ",
+							"{",
+							"",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Ends here\"] = \"Test Case Ends:LMS Router Section Check\" === \"Test Case Ends:LMS Router Section Check\";",
+							"}",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"LMS Router Section Data\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{connect2Url}}",
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"enabled": true,
+							"key": "apitask",
+							"type": "text",
+							"value": "lms-router-section-data"
+						},
+						{
+							"enabled": true,
+							"key": "clid",
+							"type": "text",
+							"value": "{{clid}}"
+						},
+						{
+							"enabled": true,
+							"key": "ses",
+							"type": "text",
+							"value": "{{lureses}}"
+						},
+						{
+							"enabled": true,
+							"key": "apikey",
+							"type": "text",
+							"value": "{{apikey}}"
+						},
+						{
+							"enabled": true,
+							"key": "api",
+							"type": "text",
+							"value": "json"
+						},
+						{
+							"enabled": false,
+							"key": "",
+							"type": "text",
+							"value": ""
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "LMS Context by Internal ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"{",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Started\"] = \"Test Case Started:LMS Context by Internal ID\" === \"Test Case Started:LMS Context by Internal ID\";",
+							"}",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"console.log(jsonData.length);",
+							"",
+							"",
+							"//Verification of Status",
+							"",
+							"{",
+							"",
+							" if(jsonData.length === 0)",
+							"  ",
+							"   {",
+							"          ",
+							"          tests[\"Clid passed dosen't seems to be associated with LMS\"] = null;",
+							"          ",
+							"    }",
+							" else",
+							"   {",
+							"       tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"   }",
+							"}",
+							"",
+							"",
+							"",
+							"// Actual tests",
+							"",
+							"{",
+							"    if(responseCode.code === 200 && jsonData.length !== 0)",
+							"    {",
+							"        // Check Responce Structure(fields)",
+							"        // tests[\"check \\\"source_lms_name\\\" field in the response structure\"] = responseBody.has(\"source_lms_name\");",
+							"        // tests[\"check \\\"source_id\\\" field in the response structure\"] = ",
+							"        // responseBody.has(\"source_id\");",
+							"        // tests[\"check \\\"source_context_id\\\" field in the response structure\"] = responseBody.has(\"source_context_id\");",
+							"        // tests[\"check \\\"internal_org_id\\\" field in the response structure\"] = responseBody.has(\"internal_org_id\");",
+							"        // tests[\"check \\\"internal_context_id\\\" field in the response structure\"] = responseBody.has(\"internal_context_id\");",
+							"         tests[\"check response body has the expected response structure\"] = responseBody.has(\"internal_context_id\" && \"source_lms_name\" && \"source_id\" && \"source_context_id\" && \"internal_org_id\");",
+							"        // Check Field Values",
+							"         tests[\"Check internal context id is same as clid passed to the API call\"] = jsonData.internal_context_id === globals.cli ;",
+							"         ",
+							"    }",
+							"",
+							"}",
+							"",
+							"",
+							"//Test Case Ends",
+							" ",
+							"{",
+							"",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Ends here\"] = \"Test Case Ends:LMS Context by Internal ID\" === \"Test Case Ends:LMS Context by Internal ID\";",
+							"}",
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"LMS Context by Internal ID\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://lure-qastg.integration.nonprod.mheducation.com/v1/lmsContext/byInternal/5003000031203",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer 3692996b-5e05-4bc3-bb5d-5ac487494146",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "This call gives a blank response if the clid belongs to only connect2 and gives a valid response if the clid is linked to LMS."
+			},
+			"response": []
+		},
+		{
+			"name": "IDM / Org Token_valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"tests[\"Check for a Content Type\"]=postman.getResponseHeader(\"Content-Type\");",
+							"tests[\"Check not equality\"]=responseCode.code === 200;",
+							"var helpers = eval(globals.globalFunctions);",
+							"//console.log(helpers.x());",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Started\"] = \"Test Case Started:Getting a IDM token\" === \"Test Case Started:Getting a IDM token\";",
+							"{",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setGlobalVariable(\"jwt\",JSON.stringify(jsonData.access_token));",
+							"postman.setGlobalVariable(\"jwt\", JSON.parse(globals.jwt));",
+							"",
+							"tests[\"response body should contain access token\"]= responseBody.has(\"access_token\");",
+							"tests[\"response body should contain token type\"]= jsonData.token_type===\"bearer\";",
+							"tests[\"response body should contain scope\"]= jsonData.scope ===\"provisioning fulluser\";",
+							"}",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Ends here\"] = \"Test Case Ends:Getting a IDM token\" === \"Test Case Ends:Getting a IDM token\";",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.clearGlobalVariables();",
+							"",
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"Getting a IDM token\");",
+							"",
+							"/*globalFunctions = {",
+							"testcaseStartLog: function() {",
+							"console.log(\"\\n\");",
+							"console.log(Date.create().format(\"{yyyy}-{Month}-{dd} {hh}:{mm}:{ss}\") + \" TESTCASE STARTED: \" + globals.currentTestCaseName);",
+							"return (\"Test Case Started:\" +globals.currentTestCaseName);",
+							" },",
+							" testcaseEndLog: function() {",
+							"console.log(Date.create().format(\"{yyyy}-{Month}-{dd} {hh}:{mm}:{ss}\") + \" TESTCASE ENDED: \" + globals.currentTestCaseName);",
+							" return (\"Test Case Ends:\"+globals.currentTestCaseName);",
+							"},",
+							"getCurrentTime: function()",
+							"{",
+							"   var date = new Date();",
+							"   var time = date.getHours()+'_'+date.getMinutes();",
+							"   return time;",
+							"}",
+							"};",
+							"postman.setGlobalVariable(\"globalFunctions\" ,globalFunctions);",
+							"*/",
+							"postman.setGlobalVariable(\"globalFunctions\",function globalFunctions()",
+							"{",
+							"     let helpers ={};",
+							"    helpers.x = function testcaseStartLog() {",
+							"console.log(\"\\n\");",
+							"console.log(Date.create().format(\"{yyyy}-{Month}-{dd} {hh}:{mm}:{ss}\") + \" TESTCASE STARTED: \" + globals.currentTestCaseName);",
+							"return (\"Test Case Started:\" +globals.currentTestCaseName);",
+							" }",
+							"  helpers.y=function testcaseEndLog() {",
+							"console.log(Date.create().format(\"{yyyy}-{Month}-{dd} {hh}:{mm}:{ss}\") + \" TESTCASE ENDED: \" + globals.currentTestCaseName);",
+							" return (\"Test Case Ends:\"+globals.currentTestCaseName);",
+							"}",
+							"return helpers;",
+							"/*getCurrentTime: function()",
+							"{",
+							"   var date = new Date();",
+							"   var time = date.getHours()+'_'+date.getMinutes();",
+							"   return time;",
+							"}*/",
+							"}  + ';globalFunctions();');",
+							"",
+							"",
+							"/*postman.setGlobalVariable(\"globalFunctions\" ,",
+							"function globalFunctions(){",
+							"    let helpers = {};",
+							"helpers.testcaseStart = function testcaseStartLog() {",
+							"console.log(\"\\n\");",
+							"console.log(Date.create().format(\"{yyyy}-{Month}-{dd} {hh}:{mm}:{ss}\") + \" TESTCASE STARTED: \" + globals.currentTestCaseName);",
+							"return (\"Test Case Started:\" +globals.currentTestCaseName);",
+							" }",
+							"helpers.testcaseEnd=function testcaseEndLog() {",
+							"console.log(Date.create().format(\"{yyyy}-{Month}-{dd} {hh}:{mm}:{ss}\") + \" TESTCASE ENDED: \" + globals.currentTestCaseName);",
+							" return (\"Test Case Ends:\"+globals.currentTestCaseName);",
+							"}",
+							"});*/"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{idmurl}}/v1/token",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "EngradeStageClient",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "client_secret",
+							"value": "EngradeStageClient",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "scope",
+							"value": "provisioning fulluser",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "api",
+							"value": "json",
+							"type": "text",
+							"enabled": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "IDM_userDetails_valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"/* Test Case Start*/",
+							"//............................................................................................",
+							"{",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Started\"] = \"Test Case Started:Getting an IDM data for a user\" === \"Test Case Started:Getting an IDM data for a user\";",
+							"}",
+							"//............................................................................................",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"",
+							"",
+							"/*Verification of Status*/",
+							"//............................................................................................",
+							"{",
+							"",
+							" if(responseBody.has(\"error\"))",
+							"  ",
+							"   {",
+							"       if(jsonData.error.code == \"GEN-UNAUTHORIZED\")",
+							"       {",
+							"          tests[\"Access token has expired...pls check and re-run again \" + \"\\\"Error Status:\\\" \" + responseCode.code]= null;",
+							"          ",
+							"       }",
+							"    }",
+							" else",
+							"   {",
+							"       tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"   }",
+							"}",
+							"",
+							"//............................................................................................",
+							"",
+							"",
+							"/* Actual Tests*/",
+							"//............................................................................................",
+							"{",
+							"    if(responseCode.code === 200)",
+							"    {",
+							"        tests[\"Contains address section\"] = responseBody.has(\"address\" && \"streetAddress\" && \"locality\"&& \"region\" && \"postalCode\" && \"country\");",
+							"        tests[\"Contains Cliend ID or not\"] = responseBody.has(\"createdClientId\");",
+							"        tests[\"Contains Org ID or not\"] = responseBody.has(\"id\");",
+							"",
+							"        tests[\"Contains User Name or not\"] = responseBody.has(\"userName\" && \"userType\");",
+							"        tests[\"contains user Type or not\"] = responseBody.has(\"active\" && \"status\");",
+							"        tests[\"Contains Status or not\"] = responseBody.has(\"nameHonorificPrefix\" && \"nameHonorificSuffix\");",
+							"        tests[\"Contains email or not\"] = responseBody.has(\"email\" && \"emailVerified\");",
+							"        tests[\"Contains Phone or not\"] = responseBody.has(\"givenName\" && \"familyName\" && \"fullName\" && \"phone\");",
+							"        tests[\"Contains Terms accepted date or not\"] = responseBody.has(\"termsAcceptedAt\" && \"activationCode\" && \"activationCodeExpiresAt\" && \"activatedAt\" && \"optMarketing\");",
+							"        tests[\"Contains Locale or not\"] = responseBody.has(\"locale\" && \"preferredLanguage\" && \"timezone\" && \"createdBy\" && \"updatedBy\" && \"createdAt\" && \"updatedAt\");",
+							"        tests[\"Contains password Must Change or not\"] = responseBody.has(\"passwordMustChange\");",
+							"",
+							"        tests[\"Contains External ID or not\"] = responseBody.has(\"externalId\" && \"authRms\" && \"authLdap\" && \"clientId\" );",
+							"",
+							"        tests[\"Contains Security Question or not\"] = responseBody.has(\"question\");",
+							"        tests[\"Contains Security answer or not\"] = responseBody.has(\"response\");",
+							"    }",
+							"",
+							"}",
+							"//............................................................................................",
+							"/*Test Case Ends*/",
+							"//............................................................................................",
+							"{",
+							"",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Ends here\"] = \"Test Case Ends:Getting an IDM data for a user\" === \"Test Case Ends:Getting an IDM data for a user\";",
+							"}",
+							"//............................................................................................",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"Getting an IDM data for a user\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{idmurl}}/v1/Users/userName/std1_apr1317@mheqa.com",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "IDM_userDetails_valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"/* Test Case Start*/",
+							"//............................................................................................",
+							"{",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Started\"] = \"Test Case Started:Getting an IDM data for a user\" === \"Test Case Started:Getting an IDM data for a user\";",
+							"}",
+							"//............................................................................................",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"",
+							"",
+							"/*Verification of Status*/",
+							"//............................................................................................",
+							"{",
+							"",
+							" if(responseBody.has(\"error\"))",
+							"  ",
+							"   {",
+							"       if(jsonData.error.code == \"GEN-UNAUTHORIZED\")",
+							"       {",
+							"          tests[\"Access token has expired...pls check and re-run again \" + \"\\\"Error Status:\\\" \" + responseCode.code]= null;",
+							"          ",
+							"       }",
+							"    }",
+							" else",
+							"   {",
+							"       tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"   }",
+							"}",
+							"",
+							"//............................................................................................",
+							"",
+							"",
+							"/* Actual Tests*/",
+							"//............................................................................................",
+							"{",
+							"    if(responseCode.code === 200)",
+							"    {",
+							"        tests[\"Contains address section\"] = responseBody.has(\"address\" && \"streetAddress\" && \"locality\"&& \"region\" && \"postalCode\" && \"country\");",
+							"        tests[\"Contains Cliend ID or not\"] = responseBody.has(\"createdClientId\");",
+							"        tests[\"Contains Org ID or not\"] = responseBody.has(\"id\");",
+							"",
+							"        tests[\"Contains User Name or not\"] = responseBody.has(\"userName\" && \"userType\");",
+							"        tests[\"contains user Type or not\"] = responseBody.has(\"active\" && \"status\");",
+							"        tests[\"Contains Status or not\"] = responseBody.has(\"nameHonorificPrefix\" && \"nameHonorificSuffix\");",
+							"        tests[\"Contains email or not\"] = responseBody.has(\"email\" && \"emailVerified\");",
+							"        tests[\"Contains Phone or not\"] = responseBody.has(\"givenName\" && \"familyName\" && \"fullName\" && \"phone\");",
+							"        tests[\"Contains Terms accepted date or not\"] = responseBody.has(\"termsAcceptedAt\" && \"activationCode\" && \"activationCodeExpiresAt\" && \"activatedAt\" && \"optMarketing\");",
+							"        tests[\"Contains Locale or not\"] = responseBody.has(\"locale\" && \"preferredLanguage\" && \"timezone\" && \"createdBy\" && \"updatedBy\" && \"createdAt\" && \"updatedAt\");",
+							"        tests[\"Contains password Must Change or not\"] = responseBody.has(\"passwordMustChange\");",
+							"",
+							"        tests[\"Contains External ID or not\"] = responseBody.has(\"externalId\" && \"authRms\" && \"authLdap\" && \"clientId\" );",
+							"",
+							"        tests[\"Contains Security Question or not\"] = responseBody.has(\"question\");",
+							"        tests[\"Contains Security answer or not\"] = responseBody.has(\"response\");",
+							"    }",
+							"",
+							"}",
+							"//............................................................................................",
+							"/*Test Case Ends*/",
+							"//............................................................................................",
+							"{",
+							"",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Ends here\"] = \"Test Case Ends:Getting an IDM data for a user\" === \"Test Case Ends:Getting an IDM data for a user\";",
+							"}",
+							"//............................................................................................",
+							""
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"Getting an IDM data for a user\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{idmurl}}/v1/Users/userName/std1_apr1317@mheqa.com",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "ENT_User_Valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"/* Test Case Start*/",
+							"//............................................................................................",
+							"{",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Started\"] = \"Test Case Started:Getting an Entitlememts for a user\" === \"Test Case Started:Getting an Entitlememts for a user\";",
+							"}",
+							"//............................................................................................",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"/*Verification of Status*/",
+							"//............................................................................................",
+							"{",
+							"if(jsonData.code == \"access_denied\")",
+							"   {",
+							"    tests[\"Access token has expired...pls check and re-run again \"+ \"\\\"Error Status:\\\" \" + responseCode.code]=null;",
+							"    ",
+							"   }",
+							" else",
+							" {",
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							" }",
+							"}",
+							"//............................................................................................",
+							"",
+							"",
+							" /*Actual Tests*/",
+							"//............................................................................................",
+							"",
+							"{",
+							"    if(responseCode.code === 200)",
+							"    {",
+							"       tests[\"response should contain resource\"]=responseBody.has(\"resource\");",
+							"       tests[\"response should contain resource Name\"]=responseBody.has(\"resourceName\");",
+							"       tests[\"response should contain resource Type\"]=responseBody.has(\"resourceType\");",
+							"       tests[\"response should contain start Time\"]=responseBody.has(\"startTime\");",
+							"       tests[\"response should contain license Type\"]=responseBody.has(\"licenseType\");",
+							"       //tests[\"response should contain resource\"]=responseBody.has(\"licenseType\");",
+							"       for (var i=0; i<jsonData.length ; i++)",
+							"         {",
+							"              var resource = jsonData[i].resource;",
+							"              var resourceType = jsonData[i].resourceType;",
+							"    ",
+							"             try",
+							"                {",
+							"                     if((resource == \"78a86625-2edb-4691-ac20-e516a5f548c8\" && resourceType == \"course\") || (resource == \"35ee3e8e-fd26-4a27-89d8-33b281a27642\" && resourceType == \"course\")||(resource == \"0c960471-3c8f-4636-a66f-1d5e4e074c5e\" && resourceType == \"course\"))",
+							"                        {",
+							"                            tests[\"Course resource and resource type matched\"]= jsonData[i].resourceName===jsonData[i].resourceName;",
+							"                        }",
+							"                    else if((resource == \"A9B0146089\" && resourceType == \"smartbook\")||(resource == \"A9B0088111\" && resourceType == \"smartbook\")||(resource == \"A9B0140431\" && resourceType == \"smartbook\"))",
+							"                        {",
+							"                            tests[\"Smart Book resource and resource type matched\"]=jsonData[i].resourceName===jsonData[i].resourceName;",
+							"                         }",
+							"                     else",
+							"                         {",
+							"                              tests[\"Something has went wrong in response. Please check validity of data provided as well\"] =console.log(\"Something went wrong in response\") === null;",
+							"                         }",
+							"                }",
+							"                catch(Exception)",
+							"                {",
+							"                    console.log(Exception);",
+							"                 }",
+							"     ",
+							"          }",
+							"  ",
+							"    }",
+							"}",
+							"//............................................................................................",
+							"",
+							"",
+							"/*Test Case Ends*/",
+							"//.............................................................................................",
+							"{",
+							"",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Ends here\"] = \"Test Case Ends:Getting an Entitlememts for a user\" === \"Test Case Ends:Getting an Entitlememts for a user\";",
+							"}",
+							"//............................................................................................."
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"Getting an Entitlememts for a user\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{enturl}}/ent/api/v1/entitlements/10000310000302006",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "This call is to get entitlements for a particular user"
+			},
+			"response": []
+		},
+		{
+			"name": "OrgId_c2_valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"/* Test Case Start*/",
+							"//............................................................................................",
+							"{",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Started\"] = \"Test Case Started:Getting an Organistaion ID\" === \"Test Case Started:Getting an Organistaion ID\";",
+							"}",
+							"//............................................................................................",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"/*Verification of Status*/",
+							"//............................................................................................",
+							"{",
+							"    try",
+							"    {",
+							"        if(responseBody.has(\"error\"))",
+							"  ",
+							"            {",
+							"                 if(jsonData.error == \"invalid_token\")",
+							"                     {",
+							"                         tests[\"Access token has expired...pls check and re-run again\"]=null;",
+							"                         throw new Error(\"stopping the execution\");",
+							"                     }",
+							"            }",
+							"        else if(responseBody.has(\"code\"))",
+							"            {",
+							"                if(jsondata.code ==\"error.404\")",
+							"                     {",
+							"                        tests[\"School ID passed doesn't exists\"]= jsonData.message === \"Requested resource does not exist\";",
+							"                     }",
+							"             }",
+							"   ",
+							"        else",
+							"            {",
+							"                 tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"             }",
+							"    }",
+							"    catch(e) ",
+							"    {",
+							"        console.log(e);",
+							"        ",
+							"    }",
+							"    ",
+							"",
+							"}",
+							"//............................................................................................",
+							"//console.log(jsonData.externalIdentifiers[0].value);",
+							"/*Actual Tests*/",
+							"//............................................................................................",
+							"{",
+							"    if (responseCode.code == 200)",
+							"    {",
+							"       if(jsonData.externalIdentifiers[0].value == \"10000310000000015\" && jsonData.externalIdentifiers[0].source == \"CONNECT2\")",
+							"        {",
+							"           tests[\"Name of the school corresponding to org ID passed\"] ",
+							"           = (jsonData.name === \"2 ACADEMY OF LEARNING COLLEGE-HEAD OFFICE\") && (jsonData.id === \"e58a715e-05f3-440c-8d77-4da4fca6a58c\");",
+							"        }",
+							"       else",
+							"        {",
+							"         tests[\"Please check the connect2 school ID passed is as per the validation provided, \"+ \"\\\"School Name in the response is:\\\" \"+ jsonData.name ] = null;",
+							"        }",
+							"    }",
+							"}",
+							"//............................................................................................",
+							"",
+							"/*Test Case Ends*/",
+							"//............................................................................................",
+							"{",
+							"tests[globals.currentTestCaseName+\" \"+\"Test Case Ends here\"] = \"Test Case Ends:Getting an Organistaion ID\" === \"Test Case Ends:Getting an Organistaion ID\";",
+							"}",
+							"//............................................................................................"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.setGlobalVariable(\"currentTestCaseName\" , \"Getting an Organistaion ID\");",
+							"",
+							"",
+							"",
+							"//postman.setGlobalVariable(\"globalFunctions\" , \"\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{orgurl}}/api/v1/organizations/Connect2/10000310000000015",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
